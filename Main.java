@@ -1,90 +1,269 @@
 import java.util.Scanner;
 
 class Main {
+ // We are creating an Object named Student and we are giving attributes
 
-    class Student{
+    static class Student
+{
         String Name; 
         String StudentNo;
         String ServiceType;
         int Estimated_Serv_Time;
 
-        public Student(String Name, String StudentNo,String ServiceType, int Estimated_Serv_Time){
+        public Student(String Name, String StudentNo,String ServiceType, int Estimated_Serv_Time)
+        {
             this.Name= Name; 
             this.StudentNo=StudentNo;
             this.ServiceType=ServiceType;
-            this.Estimated_Serv_Time=Estimated_Serv_Time;}   
-    }
-    Student Student1= new Student("Maria","221045678","Registration",12);
-    Student Student2= new Student("Tomas","222034512","Student Card",5);
-    Student Student3= new Student("Ndapewa","223041876","Fees",8);
-    Student Student4= new Student("Simon","221067341","Documents",4);
-    
+            this.Estimated_Serv_Time=Estimated_Serv_Time;
+        }
+            
+                @Override
+                public String toString() 
+                {
+                   
+                    return   this.Name + " - " + this.StudentNo + " - "+ this.ServiceType +" - "+ this.Estimated_Serv_Time; 
+                }
+               
+}
+    static Student Student1= new Student("Maria","221045678","Registration",12);
+    static Student Student2= new Student("Tomas","222034512","Student Card",5);
+    static Student Student3= new Student("Ndapewa","223041876","Fees",8);
+    static Student Student4= new Student("Simon","221067341","Documents",4);
+
+//We are creating a queue  
+
     static int front  = -1;
     static int rear   = -1;
-    static int size = 4;
+    static int size = 8;
     static Student [] queue  = new Student[size];
-   
-
-     public static void enqueue (Student Student) {
-
+    static LinkedList list = new LinkedList();
     
+
+     public static void enqueue (Student Student)
+{
         if (rear  == size - 1) {
-            System.out.println(" Queue is full");
+            System.out.println(" Queue is full");    
         }
-        else if (front == -1 && rear== -1 ){
+        else if (front == -1 && rear== -1 )
+        {
             front= 0;
             rear= 0; 
             queue[rear] = Student;
-    
         }
-        else{
+        else
+        {
             rear++;
             queue[rear] = Student;
         }
-        
-    
+}
+    public static void dequeue()
+{
+        if (front == -1 && rear== -1 )
+        {
+           System.out.println("Queue is empty !"); 
+        }
+        else if (front == rear )
+        {
+            front= -1;
+            rear= -1; 
+        }
+        else
+        {
+            System.out.println("Student Deleted is: " + queue[front]);
+            front++;
+        }
+}
+   public static void isEmpty()
+{
+
+    if(front == -1 || front > rear )
+    {
+
+        System.out.println("Queue is empty !");
+
+    } 
+    else 
+    {
+        System.out.println("Queue is not empty !");
     }
+}
+    public static void peek()
+{
 
-    public static void main(String[] args) {
-    
+    if(rear==-1 )
+    {
 
-        
+        System.out.println("Queue is empty !");
+
+    } 
+    else 
+    {
+        System.out.println(queue[front]);
+    }
+}
+   static class Node
+{
+        Student Student;
+        Node next;
+        public Node(Student Student)
+        {
+            this.Student = Student;
+            this.next=null;
+        }
+}
+    static class LinkedList
+{
+            Node head;
+            void insert(Student Student)
+            {
+              Node newNode= new Node(Student);
+
+             if(head==null)
+             {
+                head = newNode;
+             }
+             else
+             {
+                Node current = head; 
+                while(current.next != null)
+                {
+                    current =current.next;
+                }
+                current.next=newNode;
+             }
+            
+            }
+            void Display(){
+                Node current = head;
+                while( current!=null )
+                {
+                    System.out.println("Name: "+ current.Student.Name);
+                    System.out.println("Student Number: "+ current.Student.StudentNo);
+                    System.out.println("Service Type: "+ current.Student.ServiceType);
+                    System.out.println("Estimated Time: "+ current.Student.Estimated_Serv_Time);
+                    System.out.println("--------------------------------------------------- ");
+                    current = current.next;
+                }   
+        }
+}
+
+    public static void main(String[] args) 
+{
+
+    //We are enqueue student  
+        enqueue(Student1); 
+        enqueue(Student2);
+        enqueue(Student3);
+        enqueue(Student4);
+      
+    // Here we are print the Menu
+       while(true) 
+{
+
+       
         System.out.println("-----------------------------------------------------------");
         System.out.println("****************CAMPUS SERVICE CENTER**********************");
         System.out.println("-----------------------------------------------------------");
         System.out.println("1. Add student to waiting queue");
         System.out.println("2. Serve next student ");
         System.out.println("3. Display waiting student");
-        System.out.println("4. Add student service record ");
-        System.out.println("6. Dispaly student service records");
-        System.out.println("7. Remove student record");
-        System.out.println("8. Display daily statistic");
-        System.out.println("9. Sort service time ");
-        System.out.println("10. Run sorting times ");
-        System.out.println("11. Exit ");
+        System.out.println("4. Verify if queue is Empty or not ");
+        System.out.println("5. Serach in the queue");
+        System.out.println("6. Add student service record ");
+        System.out.println("7. Display student service records");
+        System.out.println("8. Remove student record");
+        System.out.println("9. Display daily statistic");
+        System.out.println("10. Sort service time ");
+        System.out.println("11. Run sorting times ");
+        System.out.println("12. Exit ");
+
         Scanner input = new Scanner(System.in);
         System.out.println("Enter your choice: ");
         int choice= input.nextInt();
-        switch(choice) {
-            case 1:
+
+    //Menu 
+        if(choice==1)
+        {
+            input.nextLine();
+            System.out.println("Enter your student Name: ");
+            String Name=input.nextLine(); 
+            System.out.println("Enter your student Number: ");
+            String StudentNo=input.nextLine(); 
+            System.out.println("Enter the Service type: ");
+            String ServiceType=input.nextLine(); 
+            System.out.println("Enter the Estimated Time: ");
+            int Estimated_Serv_Time=input.nextInt(); 
+            Student newStudent=new Student( 
+                Name, 
+                StudentNo,
+                ServiceType,
+                Estimated_Serv_Time); 
                 
-                enqueue(Student1);
-                enqueue(Student2);
-                enqueue(Student3);
-                enqueue(Student4);
-                break;
-            
-            default:
-                System.out.println("Opção inválida");
+                enqueue(newStudent);
+                System.out.println("Student added in queue!");    
+        }
+        else if(choice==2)
+        {
+            dequeue(); 
+            dequeue(); 
+            dequeue();
+        }
+        else if(choice==3){
+            if (front == -1 && rear== -1 )
+                {
+                System.out.println("Queue is empty !"); 
+                }
+            else{
+                for(int i=front; i< rear + 1; i++)
+                {
+                    System.out.println(queue[i]);
+                }
+                }
+        }
+        else if(choice==4)
+        {
+              isEmpty();
+
+        }
+        else if(choice==5)
+        {
+              peek();
+
+        }
+        else if(choice==6)
+        {
+              input.nextLine();
+              System.out.println("Enter your student Name: ");
+              String Name = input.nextLine(); 
+              System.out.println("Enter your student Number: ");
+              String StudentNo = input.nextLine(); 
+              System.out.println("Enter the Service type: ");
+              String ServiceType = input.nextLine(); 
+              System.out.println("Enter the Estimated Time: ");
+              int Estimated_Serv_Time = input.nextInt(); 
+              Student newStudent = new Student( 
+                Name, 
+                StudentNo,
+                ServiceType,
+                Estimated_Serv_Time);
+                list.insert(newStudent);
+                System.out.println("Student service record added...");
+        }
+        else if(choice == 7)
+        {
+            list.Display();
+      
+        }
+        else
+        {
+            System.out.println("Invalid Operation! Try again...");
+            break; 
         }
 
-        input.close();
         
-
-
-
-
-    }
+}
+}
 }
 
 
