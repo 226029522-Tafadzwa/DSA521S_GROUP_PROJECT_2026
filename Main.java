@@ -1,9 +1,4 @@
-
-<<<<<<< HEAD
- import java.util.Scanner;
-=======
 import java.util.Scanner;
->>>>>>> 49f2ad3b7f77f581d61e44b7adb34b1a6ea649df
  
 class Main {
  
@@ -152,75 +147,6 @@ class Main {
         enqueue(Student2);
         enqueue(Student3);
         enqueue(Student4);
- 
-        while (true) {
-            System.out.println("-----------------------------------------------------------");
-            System.out.println("****************CAMPUS SERVICE CENTER**********************");
-            System.out.println("-----------------------------------------------------------");
-            System.out.println("1. Add student to waiting queue");
-            System.out.println("2. Serve next student ");
-            System.out.println("3. Display waiting student");
-            System.out.println("4. Verify if queue is Empty or not ");
-            System.out.println("5. Search in the queue");
-            System.out.println("6. Add student service record ");
-            System.out.println("7. Display student service records");
-            System.out.println("8. Remove student record");
-            System.out.println("9. Display daily statistic");
-            System.out.println("10. Sort service time ");
-            System.out.println("11. Run sorting times ");
-            System.out.println("12. Exit ");
- 
-            int choice = readInt("Enter your choice: ");
- 
-            if (choice == 1) {
-                enqueue(readStudent());
-                System.out.println("Student added in queue!");
-            } else if (choice == 2) {
-                dequeue();
-            } else if (choice == 3) {
-                if (front == -1 && rear == -1) {
-                    System.out.println("Queue is empty !");
-                } else {
-                    for (int i = front; i < rear + 1; i++) {
-                        System.out.println(queue[i]);
-                    }
-                }
-            } else if (choice == 4) {
-                isEmpty();
-            } else if (choice == 5) {
-                peek();
-            } else if (choice == 6) {
-                System.out.println("1.Insert record in End ");
-                System.out.println("2.Insert record in begin ");
-                System.out.println("3.Insert record in the specific position (not implemented yet)");
-                System.out.println("4.Delete Record (not implemented yet)");
-                System.out.println("5.Search Record (not implemented yet)");
-                System.out.println("6.Display Record ");
-                int option = readInt("Enter your option: ");
-                switch (option) {
-                    case 1:
-                        list.insertEnd(readStudent());
-                        System.out.println("Student service record added at the end.");
-                        break;
-                    case 2:
-                        list.insertBeg(readStudent());
-                        System.out.println("Student service record added at the beginning.");
-                        break;
-                    case 6:
-                        list.Display();
-                        break;
-                    default:
-                        System.out.println("Not implemented yet.");
-                }
-            } else if (choice == 7) {
-                list.Display();
-            } else {
-                System.out.println("Invalid Operation! Try again...");
-                break;
-            }
-        }
-    }
-}
  
         while (true) {
             System.out.println("-----------------------------------------------------------");
