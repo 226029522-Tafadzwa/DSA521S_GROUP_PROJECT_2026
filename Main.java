@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
  
 class Main {
@@ -47,16 +48,19 @@ class Main {
         }
     }
  
-    public static void dequeue() {
+    // STEP 2: returns the served student (null if the queue is empty)
+    public static Student dequeue() {
         if (front == -1 && rear == -1) {
-            System.out.println("Queue is empty !");
-        } else if (front == rear) {
+            return null;
+        }
+        Student served = queue[front];
+        if (front == rear) {
             front = -1;
             rear = -1;
         } else {
-            System.out.println("Student Deleted is: " + queue[front]);
             front++;
         }
+        return served;
     }
  
     public static void isEmpty() {
@@ -89,12 +93,14 @@ class Main {
     static class LinkedList {
         Node head;
  
+        // Insert at the beginning
         void insertBeg(Student Student) {
             Node newNode = new Node(Student);
             newNode.next = head;
             head = newNode;
         }
  
+        // Insert at the end
         void insertEnd(Student Student) {
             Node newNode = new Node(Student);
             if (head == null) {
@@ -108,7 +114,69 @@ class Main {
             }
         }
  
-        void Display() {
+        // Insert at a given position (1 = beginning, 2 = second node, ...).
+        // Returns false if the position is invalid.
+        boolean insertStudent(Student Student, int position) {
+            if (position < 1) {
+                return false;
+            }
+            if (position == 1) {
+                insertBeg(Student);
+                return true;
+            }
+            // walk to the node BEFORE the wanted position
+            Node current = head;
+            for (int i = 1; i < position - 1 && current != null; i++) {
+                current = current.next;
+            }
+            if (current == null) {
+                return false; // position is beyond size + 1
+            }
+            Node newNode = new Node(Student);
+            newNode.next = current.next;  // new node points to the rest
+            current.next = newNode;       // previous node points to new node
+            return true;
+        }
+ 
+        // Delete the record with the given student number.
+        // Returns false if it was not found.
+        boolean deleteStudent(String studentNo) {
+            if (head == null) {
+                return false;
+            }
+            if (head.Student.StudentNo.equals(studentNo)) { // deleting the first node
+                head = head.next;
+                return true;
+            }
+            Node current = head;
+            while (current.next != null && !current.next.Student.StudentNo.equals(studentNo)) {
+                current = current.next;
+            }
+            if (current.next == null) {
+                return false; // not found
+            }
+            current.next = current.next.next; // skip the deleted node
+            return true;
+        }
+ 
+        // Search by student number. Returns the node, or null if not found.
+        Node searchStudent(String studentNo) {
+            Node current = head;
+            while (current != null) {
+                if (current.Student.StudentNo.equals(studentNo)) {
+                    return current;
+                }
+                current = current.next;
+            }
+            return null;
+        }
+ 
+        // Traverse and print all records
+        void displayStudents() {
+            if (head == null) {
+                System.out.println("No service records yet.");
+                return;
+            }
             Node current = head;
             while (current != null) {
                 System.out.println("Name: " + current.Student.Name);
@@ -121,12 +189,17 @@ class Main {
         }
     }
  
-    // ---------- Input helpers (STEP 1) ----------
+    // ---------- Input helpers ----------
     static Scanner input = new Scanner(System.in);
  
     static int readInt(String prompt) {
         System.out.println(prompt);
         return Integer.parseInt(input.nextLine().trim());
+    }
+ 
+    static String readLine(String prompt) {
+        System.out.println(prompt);
+        return input.nextLine().trim();
     }
  
     static Student readStudent() {
@@ -138,6 +211,26 @@ class Main {
         String serviceType = input.nextLine();
         int time = readInt("Enter estimated service time (min): ");
         return new Student(name, studentNo, serviceType, time);
+    }
+ 
+    // ---------- Record operations used by the menu ----------
+    static void deleteRecord() {
+        String no = readLine("Enter the student number to delete: ");
+        if (list.deleteStudent(no)) {
+            System.out.println("Record deleted.");
+        } else {
+            System.out.println("Record not found.");
+        }
+    }
+ 
+    static void searchRecord() {
+        String no = readLine("Enter the student number to search: ");
+        Node found = list.searchStudent(no);
+        if (found == null) {
+            System.out.println("Record not found.");
+        } else {
+            System.out.println("Record found: " + found.Student);
+        }
     }
  
     // ---------- Main ----------
@@ -171,7 +264,12 @@ class Main {
                 enqueue(readStudent());
                 System.out.println("Student added in queue!");
             } else if (choice == 2) {
-                dequeue();
+                Student served = dequeue();
+                if (served == null) {
+                    System.out.println("Queue is empty !");
+                } else {
+                    System.out.println("Now serving: " + served);
+                }
             } else if (choice == 3) {
                 if (front == -1 && rear == -1) {
                     System.out.println("Queue is empty !");
@@ -185,12 +283,12 @@ class Main {
             } else if (choice == 5) {
                 peek();
             } else if (choice == 6) {
-                System.out.println("1.Insert record in End ");
-                System.out.println("2.Insert record in begin ");
-                System.out.println("3.Insert record in the specific position (not implemented yet)");
-                System.out.println("4.Delete Record (not implemented yet)");
-                System.out.println("5.Search Record (not implemented yet)");
-                System.out.println("6.Display Record ");
+                System.out.println("1.Insert record at the End ");
+                System.out.println("2.Insert record at the Beginning ");
+                System.out.println("3.Insert record at a specific position ");
+                System.out.println("4.Delete Record ");
+                System.out.println("5.Search Record ");
+                System.out.println("6.Display Records ");
                 int option = readInt("Enter your option: ");
                 switch (option) {
                     case 1:
@@ -201,18 +299,43 @@ class Main {
                         list.insertBeg(readStudent());
                         System.out.println("Student service record added at the beginning.");
                         break;
+                    case 3:
+                        int position = readInt("Enter the position (1 = beginning): ");
+                        Student s = readStudent();
+                        if (list.insertStudent(s, position)) {
+                            System.out.println("Student service record added at position " + position + ".");
+                        } else {
+                            System.out.println("Invalid position. Record not added.");
+                        }
+                        break;
+                    case 4:
+                        deleteRecord();
+                        break;
+                    case 5:
+                        searchRecord();
+                        break;
                     case 6:
-                        list.Display();
+                        list.displayStudents();
                         break;
                     default:
-                        System.out.println("Not implemented yet.");
+                        System.out.println("Invalid option.");
                 }
             } else if (choice == 7) {
-                list.Display();
+                list.displayStudents();
+            } else if (choice == 8) {
+                deleteRecord();
             } else {
-                System.out.println("Invalid Operation! Try again...");
+                System.out.println("Invalid Operation...");
                 break;
             }
         }
     }
 }
+ 
+
+
+
+
+
+
+
