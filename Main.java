@@ -325,17 +325,10 @@ class Main {
             } else if (choice == 8) {
                 deleteRecord();
             } else {
-                System.out.println("Invalid Operation...");
+                System.out.println("Invalid Operation! Try again...");
                 break;
             }
         }
     }
 }
  
-
-
-
-
-
-
-
